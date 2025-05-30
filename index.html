@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Love You Jaan</title>
+  <title>GrowEasy Invest</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -479,16 +479,13 @@
             <a href="https://t.me/@YourTelegramHandle" class="btn" target="_blank"><i class="fab fa-telegram"></i> টেলিগ্রাম</a>
           </div>
         </div>
-        <<div id="support" class="card">
-  <h2>সাপোর্ট</h2>
-  <p>সাপোর্টের জন্য আমাদের সাথে যোগাযোগ করুন</p>
-  <div class="contact-links">
-    <a href="https://wa.me/+8801234567890" class="btn" target="_blank"><i class="fab fa-whatsapp"></i> হোয়াটসঅ্যাপ</a>
-    <a href="https://t.me/@YourTelegramHandle" class="btn" target="_blank"><i class="fab fa-telegram"></i> টেলিগ্রাম</a>
-  </div>
-</div>>
+        <div id="support" class="card">
           <h2>সাপোর্ট</h2>
           <p>সাপোর্টের জন্য আমাদের সাথে যোগাযোগ করুন</p>
+          <div class="contact-links">
+            <a href="https://wa.me/+8801234567890" class="btn" target="_blank"><i class="fab fa-whatsapp"></i> হোয়াটসঅ্যাপ</a>
+            <a href="https://t.me/@YourTelegramHandle" class="btn" target="_blank"><i class="fab fa-telegram"></i> টেলিগ্রাম</a>
+          </div>
         </div>
         <div id="shop" class="card">
           <h2>শপ</h2>
@@ -675,8 +672,16 @@
       users.push(user);
       localStorage.setItem('users', JSON.stringify(users));
       localStorage.setItem('loggedInUser', JSON.stringify(user));
+
+      // Log the registration action
+      logAction({ type: 'register', email, timestamp: new Date().toISOString() });
+
       error.textContent = '';
       showDashboard(user);
+      // Notify admin panel
+      if (document.getElementById('adminDashboardContainer').style.display !== 'none') {
+        loadUserTable();
+      }
     }
 
     function login() {
@@ -691,6 +696,9 @@
         error.textContent = 'ভুল ইমেইল বা পাসওয়ার্ড';
         return;
       }
+
+      // Log the login action
+      logAction({ type: 'login', email, timestamp: new Date().toISOString() });
 
       localStorage.setItem('loggedInUser', JSON.stringify(user));
       error.textContent = '';
@@ -907,6 +915,10 @@
       localStorage.setItem('users', JSON.stringify(users));
       loggedInUser.activeBalance = (loggedInUser.activeBalance || 0) - transferAmount;
       localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+
+      // Log the transfer action
+      logAction({ type: 'transfer', fromEmail: loggedInUser.email, toEmail: transferEmail, amount: transferAmount, timestamp: new Date().toISOString() });
+
       transferError.textContent = '';
       showDashboard(loggedInUser);
       alert(`৳${transferAmount} সফলভাবে ${transferEmail} এ ট্রান্সফার করা হয়েছে`);
@@ -1006,6 +1018,9 @@
       loadTaskTable();
       showDashboard(loggedInUser);
       alert(`টাস্ক ${taskId} সম্পন্ন! আপনি ৳২ পেয়েছেন`);
+
+      // Log the task completion
+      logAction({ type: 'task_complete', email: loggedInUser.email, taskId, timestamp: new Date().toISOString() });
     }
 
     function getGenerations(userEmail) {
@@ -1154,6 +1169,9 @@
       withdrawals.push(withdrawal);
       localStorage.setItem('withdrawals', JSON.stringify(withdrawals));
 
+      // Log the withdrawal request
+      logAction({ type: 'withdrawal_request', email: loggedInUser.email, amount, method, timestamp: new Date().toISOString() });
+
       error.textContent = '';
       document.getElementById('withdrawBalanceType').value = '';
       document.getElementById('withdrawMethod').value = '';
@@ -1298,7 +1316,7 @@
       const address = document.getElementById('orderAddress').value;
       const district = document.getElementById('orderDistrict').value;
       const thana = document.getElementById('orderThana').value;
-      const up္စာ = document.getElementById('orderUpazila').value;
+      const upazila = document.getElementById('orderUpazila').value;
       const village = document.getElementById('orderVillage').value;
       const mobile = document.getElementById('orderMobile').value;
       const error = document.getElementById('orderError');
@@ -1331,6 +1349,9 @@
       let orders = JSON.parse(localStorage.getItem('orders')) || [];
       orders.push(order);
       localStorage.setItem('orders', JSON.stringify(orders));
+
+      // Log the order action
+      logAction({ type: 'order', email: loggedInUser.email, productId, timestamp: new Date().toISOString() });
 
       error.textContent = '';
       closeOrderModal();
@@ -1474,6 +1495,25 @@
       loadOrderTable();
       alert(`অর্ডার স্ট্যাটাস ${status === 'approved' ? 'অনুমোদিত' : 'শিপড'} হয়েছে`);
     }
+
+    // Add action logging function
+    function logAction(action) {
+      let userActions = JSON.parse(localStorage.getItem('userActions')) || [];
+      userActions.push(action);
+      localStorage.setItem('userActions', JSON.stringify(userActions));
+    }
+
+    // Update admin dashboard function
+    function updateAdminPanel() {
+      if (document.getElementById('adminDashboardContainer').style.display !== 'none') {
+        loadUserTable();
+        loadWithdrawalTable();
+        loadOrderTable();
+      }
+    }
+
+    // Call updateAdminPanel every 5 seconds
+    setInterval(updateAdminPanel, 5000);
 
     function logout() {
       localStorage.removeItem('loggedInUser');
