@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love You Jaan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #1e1e2f, #2d2d44);
+      color: #fff;
+    }
+    header {
+      background: #ff7f50;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      min-height: 100vh;
+    }
+    nav {
+      background: #111;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+    nav a {
+      color: #fff;
+      padding: 0.75rem 1rem;
+      margin: 0.3rem 0;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: 0.3s;
+    }
+    nav a:hover {
+      background: #ff7f50;
+    }
+    nav a.active {
+      background: #ff7f50;
+      font-weight: bold;
+    }
+    .content {
+      padding: 2rem;
+      background: url('https://images.unsplash.com/photo-1581090700227-1e8a42f6dcd4?auto=format&fit=crop&w=1050&q=80') no-repeat center center/cover;
+    }
+    .card {
+      background: rgba(0,0,0,0.6);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 15px rgba(255,127,80,0.5);
+      display: none;
+    }
+    .card.active {
+      display: block;
+    }
+    .balance {
+      display: flex;
+      justify-content: space-between;
+    }
+    .balance div {
+      background: #222;
+      padding: 1rem;
+      margin: 0.5rem;
+      flex: 1;
+      border-radius: 12px;
+      text-align: center;
+      color: #0f0;
+      font-size: 1.2rem;
+    }
+    .btn {
+      background: #ff7f50;
+      color: #fff;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 0.5rem;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover {
+      background: #ff4500;
+    }
+    .btn:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+    }
+    table, th, td {
+      border: 1px solid #444;
+      padding: 0.75rem;
+      text-align: left;
+    }
+    h2, h3 {
+      margin-top: 0;
+      color: #ffdd57;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: #222;
+      padding: 2rem;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+    }
+    .modal-content input, .modal-content select, .modal-content textarea {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      border: none;
+      border-radius: 8px;
+      background: #333;
+      color: #fff;
+    }
+    .modal-content .btn {
+      width: 100%;
+    }
+    .modal-content a {
+      color: #ff7f50;
+      text-decoration: none;
+    }
+    .modal-content a:hover {
+      color: #ff4500;
+    }
+    .error {
+      color: #ff4500;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+    .balance-input {
+      width: 100px;
+      padding: 0.5rem;
+      margin-right: 0.5rem;
+      border-radius: 8px;
+      background: #333;
+      color: #fff;
+      border: none;
+    }
+    .transfer-input, .withdraw-input, .product-input {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      border: none;
+      border-radius: 8px;
+      background: #333;
+      color: #fff;
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .dashboard-card {
+      background: #222;
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(255,127,80,0.3);
+      transition: transform 0.3s;
+    }
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+    }
+    .dashboard-card h3 {
+      margin: 0.5rem 0;
+      color: #ffdd57;
+      font-size: 1.1rem;
+    }
+    .dashboard-card p {
+      margin: 0;
+      font-size: 1.2rem;
+      color: #0f0;
+    }
+    .dashboard-card span {
+      color: #fff;
+      font-size: 0.9rem;
+    }
+    .dashboard-card .status-verified {
+      color: #0f0;
+      font-weight: bold;
+    }
+    .dashboard-card .status-unverified {
+      color: #ff4500;
+      font-weight: bold;
+    }
+    .task-link {
+      color: #ff7f50;
+      text-decoration: none;
+    }
+    .task-link:hover {
+      color: #ff4500;
+    }
+    .generation-section {
+      margin-bottom: 1.5rem;
+    }
+    .generation-section h3 {
+      font-size: 1.2rem;
+    }
+    .generation-section p {
+      margin: 0.5rem 0;
+      color: #fff;
+    }
+    .sub-table {
+      background: rgba(0,0,0,0.3);
+      margin-top: 0.5rem;
+    }
+    .withdraw-form, .product-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .withdraw-form select, .withdraw-form input, .product-form input {
+      max-width: 300px;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .product-card {
+      background: #222;
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(255,127,80,0.3);
+    }
+    .product-card img {
+      max-width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .product-card h4 {
+      margin: 0.5rem 0;
+      color: #ffdd57;
+    }
+    .product-card p {
+      margin: 0.5rem 0;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+    .contact-links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    @media (max-width: 768px) {
+      .dashboard-grid, .product-grid {
+        grid-template-columns: 1fr;
+      }
+      .container {
+        grid-template-columns: 1fr;
+      }
+      nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      nav a {
+        flex: 1 1 auto;
+        text-align: center;
+      }
+      .contact-links {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <h2>লগইন</h2>
+      <input type="email" id="loginEmail" placeholder="ইমেইল" required>
+      <input type="password" id="loginPassword" placeholder="পাসওয়ার্ড" required>
+      <button class="btn" onclick="login()">লগইন</button>
+      <p class="error" id="loginError"></p>
+      <p>অ্যাকাউন্ট নেই? <a href="#" onclick="showRegister()">রেজিস্টার করুন</a></p>
+      <p>অ্যাডমিন? <a href="#" onclick="showAdminLogin()">অ্যাডমিন লগইন</a></p>
+    </div>
+  </div>
+
+  <!-- Registration Modal -->
+  <div id="registerModal" class="modal">
+    <div class="modal-content">
+      <h2>রেজিস্ট্রেশন</h2>
+      <input type="text" id="regUsername" placeholder="ইউজারনেম" required>
+      <input type="email" id="regEmail" placeholder="ইমেইল" required>
+      <input type="tel" id="regPhone" placeholder="ফোন নম্বর (যেমন: +8801234567890)" required>
+      <input type="password" id="regPassword" placeholder="পাসওয়ার্ড" required>
+      <input type="email" id="regReferrer" placeholder="রেফারার ইমেইল (ঐচ্ছিক)">
+      <button class="btn" onclick="register()">রেজিস্টার</button>
+      <p class="error" id="registerError"></p>
+      <p>ইতিমধ্যে অ্যাকাউন্ট আছে? <a href="#" onclick="showLogin()">লগইন করুন</a></p>
+    </div>
+  </div>
+
+  <!-- Admin Login Modal -->
+  <div id="adminLoginModal" class="modal">
+    <div class="modal-content">
+      <h2>অ্যাডমিন লগইন</h2>
+      <input type="text" id="adminUsername" placeholder="অ্যাডমিন ইউজারনেম" required>
+      <input type="password" id="adminPassword" placeholder="পাসওয়ার্ড" required>
+      <button class="btn" onclick="adminLogin()">লগইন</button>
+      <p class="error" id="adminLoginError"></p>
+      <p>ইউজার লগইন? <a href="#" onclick="showLogin()">ইউজার লগইন</a></p>
+    </div>
+  </div>
+
+  <!-- Order Form Modal -->
+  <div id="orderModal" class="modal">
+    <div class="modal-content">
+      <h2>অর্ডার ফর্ম</h2>
+      <p id="orderProductName"></p>
+      <textarea id="orderAddress" placeholder="পূর্ণ ঠিকানা" required></textarea>
+      <input type="text" id="orderDistrict" placeholder="জেলা" required>
+      <input type="text" id="orderThana" placeholder="থানা" required>
+      <input type="text" id="orderUpazila" placeholder="উপজেলা" required>
+      <input type="text" id="orderVillage" placeholder="গ্রামের নাম" required>
+      <input type="tel" id="orderMobile" placeholder="মোবাইল নম্বর (যেমন: +8801XXXXXXXXX)" required>
+      <button class="btn" onclick="submitOrder()">অর্ডার জমা দিন</button>
+      <p class="error" id="orderError"></p>
+      <button class="btn" onclick="closeOrderModal()">বন্ধ করুন</button>
+    </div>
+  </div>
+
+  <!-- User Dashboard (Hidden Initially) -->
+  <div id="dashboardContainer" style="display: none;">
+    <header>সত্যি অনেক ভালোবাসি</header>
+    <div class="container">
+      <nav>
+        <a href="#dashboard" class="nav-link active" data-section="dashboard"><i class="fa fa-home"></i> ড্যাশবোর্ড</a>
+        <a href="#balance" class="nav-link" data-section="balance"><i class="fa fa-wallet"></i> ব্যালেন্স</a>
+        <a href="#active" class="nav-link" data-section="active"><i class="fa fa-check-circle"></i> আইডি একটিভেশন</a>
+        <a href="#transfer" class="nav-link" data-section="transfer"><i class="fa fa-exchange-alt"></i> ব্যালেন্স ট্রান্সফার</a>
+        <a href="#refer" class="nav-link" data-section="refer"><i class="fa fa-users"></i> রেফার</a>
+        <a href="#task" class="nav-link" data-section="task"><i class="fa fa-tasks"></i> টাস্ক</a>
+        <a href="#withdraw" class="nav-link" data-section="withdraw"><i class="fa fa-money-check"></i> উইথড্র</a>
+        <a href="#team" class="nav-link" data-section="team"><i class="fa fa-network-wired"></i> মাই টিম</a>
+        <a href="#agent" class="nav-link" data-section="agent"><i class="fa fa-user-tie"></i> এজেন্ট</a>
+        <a href="#support" class="nav-link" data-section="support"><i class="fa fa-headset"></i> সাপোর্ট</a>
+        <a href="#shop" class="nav-link" data-section="shop"><i class="fa fa-shopping-cart"></i> শপ</a>
+        <a href="#" onclick="logout()"><i class="fa fa-sign-out-alt"></i> লগআউট</a>
+      </nav>
+      <div class="content">
+        <div id="dashboard" class="card active">
+          <h2>ড্যাশবোর্ড</h2>
+          <div class="dashboard-grid">
+            <div class="dashboard-card">
+              <h3>ইউজারনেম</h3>
+              <p id="username">N/A</p>
+            </div>
+            <div class="dashboard-card">
+              <h3>ইমেইল</h3>
+              <p id="email">N/A</p>
+            </div>
+            <div class="dashboard-card">
+              <h3>স্ট্যাটাস</h3>
+              <p id="status" class="status-unverified">N/A</p>
+            </div>
+            <div class="dashboard-card">
+              <h3>একটিভ ব্যালেন্স</h3>
+              <p id="activeBalance">৳0</p>
+            </div>
+            <div class="dashboard-card">
+              <h3>IABB ব্যালেন্স</h3>
+              <p id="iabbBalance">৳0</p>
+            </div>
+            <div class="dashboard-card">
+              <h3>টাস্ক ব্যালেন্স</h3>
+              <p id="taskBalance">৳0</p>
+            </div>
+            <div class="dashboard-card">
+              <h3>টিম মেম্বার</h3>
+              <p id="teamCount">0</p>
+              <span>মাই টিম দেখুন</span>
+            </div>
+            <div class="dashboard-card">
+              <h3>রেফার লিংক</h3>
+              <p id="referLink">example.com/ref?user=N/A</p>
+            </div>
+          </div>
+        </div>
+        <div id="balance" class="card">
+          <h2>ব্যালেন্স</h2>
+          <div class="balance">
+            <div id="activeBalanceDisplay">Active Balance: ৳0</div>
+            <div id="iabbBalanceDisplay">IABB Balance: ৳0</div>
+            <div id="taskBalanceDisplay">Task Balance: ৳0</div>
+          </div>
+        </div>
+        <div id="active" class="card">
+          <h2>আইডি একটিভেশন</h2>
+          <p>৫০০ টাকা দিয়ে আপনার আইডি একটিভ করুন</p>
+          <button class="btn" onclick="activateID()">একটিভ করুন</button>
+        </div>
+        <div id="transfer" class="card">
+          <h2>ব্যালেন্স ট্রান্সফার</h2>
+          <p>অন্য ইউজারের কাছে একটিভ ব্যালেন্স ট্রান্সফার করুন</p>
+          <input type="email" id="transferEmail" class="transfer-input" placeholder="রিসিভারের ইমেইল" required>
+          <input type="number" id="transferAmount" class="transfer-input" placeholder="পরিমাণ (টাকা)" required>
+          <button class="btn" onclick="transferBalance()">ট্রান্সফার করুন</button>
+          <p class="error" id="transferError"></p>
+        </div>
+        <div id="refer" class="card">
+          <h3>রেফার কমিশন</h3>
+          <p>আপনার লিংক: <span id="referLinkDisplay">example.com/ref?user=123</span></p>
+          <p>লেভেল ১-৫ পর্যন্ত কমিশন পাবেন</p>
+        </div>
+        <div id="task" class="card">
+          <h2>টাস্ক</h2>
+          <p>প্রতিদিন ১০টি টাস্ক, প্রতি টাস্কে ২ টাকা। নিচের লিংকে ক্লিক করে টাস্ক সম্পন্ন করুন।</p>
+          <table id="taskTable">
+            <tr><th>টাস্ক</th><th>লিংক</th><th>স্ট্যাটাস</th><th>অ্যাকশন</th></tr>
+          </table>
+        </div>
+        <div id="withdraw" class="card">
+          <h2>উইথড্র</h2>
+          <p>IABB ব্যালেন্স থেকে ৩০০ টাকা হলেই উইথড্র করতে পারবেন। টাস্ক ব্যালেন্স উইথড্রের জন্য অ্যাডমিনের অনুমতি প্রয়োজন।</p>
+          <div class="withdraw-form">
+            <select id="withdrawBalanceType" onchange="updateWithdrawForm()">
+              <option value="" disabled selected>ব্যালেন্স টাইপ নির্বাচন করুন</option>
+              <option value="iabbBalance">IABB ব্যালেন্স</option>
+              <option value="taskBalance">টাস্ক ব্যালেন্স</option>
+            </select>
+            <select id="withdrawMethod" onchange="updateWithdrawForm()">
+              <option value="" disabled selected>উইথড্র পদ্ধতি নির্বাচন করুন</option>
+              <option value="bkash">বিকাশ</option>
+              <option value="nagad">নগদ</option>
+              <option value="usdt">USDT</option>
+              <option value="bep20">BEP20</option>
+            </select>
+            <input type="text" id="withdrawAccount" class="withdraw-input" placeholder="ফোন নম্বর বা ওয়ালেট অ্যাড্রেস" style="display: none;">
+            <input type="number" id="withdrawAmount" class="withdraw-input" placeholder="পরিমাণ (টাকা)">
+            <button class="btn" onclick="submitWithdrawal()">উইথড্র রিকুয়েস্ট</button>
+          </div>
+          <p class="error" id="withdrawError"></p>
+        </div>
+        <div id="team" class="card">
+          <h2>মাই টিম</h2>
+          <p>আপনার রেফারাল কাঠামো (৫ জেনারেশন)</p>
+          <div id="generationStructure"></div>
+        </div>
+        <div id="agent" class="card">
+          <h2>এজেন্ট</h2>
+          <p>এজেন্ট হতে আমাদের সাথে যোগাযোগ করুন</p>
+          <div class="contact-links">
+            <a href="https://wa.me/+8801234567890" class="btn" target="_blank"><i class="fab fa-whatsapp"></i> হোয়াটসঅ্যাপ</a>
+            <a href="https://t.me/@YourTelegramHandle" class="btn" target="_blank"><i class="fab fa-telegram"></i> টেলিগ্রাম</a>
+          </div>
+        </div>
+        <<div id="support" class="card">
+  <h2>সাপোর্ট</h2>
+  <p>সাপোর্টের জন্য আমাদের সাথে যোগাযোগ করুন</p>
+  <div class="contact-links">
+    <a href="https://wa.me/+8801234567890" class="btn" target="_blank"><i class="fab fa-whatsapp"></i> হোয়াটসঅ্যাপ</a>
+    <a href="https://t.me/@YourTelegramHandle" class="btn" target="_blank"><i class="fab fa-telegram"></i> টেলিগ্রাম</a>
+  </div>
+</div>>
+          <h2>সাপোর্ট</h2>
+          <p>সাপোর্টের জন্য আমাদের সাথে যোগাযোগ করুন</p>
+        </div>
+        <div id="shop" class="card">
+          <h2>শপ</h2>
+          <p>আপনার প্রয়োজনীয় পণ্য এখানে কিনুন</p>
+          <div id="productGrid" class="product-grid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard (Hidden Initially) -->
+  <div id="adminDashboardContainer" style="display: none;">
+    <header>অ্যাডমিন প্যানেল</header>
+    <div class="container">
+      <nav>
+        <a href="#adminUsers" class="nav-link active" data-section="adminUsers"><i class="fa fa-users"></i> ইউজার ম্যানেজমেন্ট</a>
+        <a href="#adminWithdrawals" class="nav-link" data-section="adminWithdrawals"><i class="fa fa-money-check"></i> উইথড্র রিকুয়েস্ট</a>
+        <a href="#adminProducts" class="nav-link" data-section="adminProducts"><i class="fa fa-shopping-cart"></i> প্রোডাক্ট ম্যানেজমেন্ট</a>
+        <a href="#adminOrders" class="nav-link" data-section="adminOrders"><i class="fa fa-box"></i> অর্ডার ম্যানেজমেন্ট</a>
+        <a href="#" onclick="logout()"><i class="fa fa-sign-out-alt"></i> লগআউট</a>
+      </nav>
+      <div class="content">
+        <div id="adminUsers" class="card active">
+          <h2>ইউজার ম্যানেজমেন্ট</h2>
+          <table id="userTable">
+            <tr><th>ইউজারনেম</th><th>ইমেইল</th><th>স্ট্যাটাস</th><th>একটিভ ব্যালেন্স</th><th>অ্যাকশন</th><th>টাস্ক উইথড্র</th></tr>
+          </table>
+        </div>
+        <div id="adminWithdrawals" class="card">
+          <h2>উইথড্র রিকুয়েস্ট</h2>
+          <table id="withdrawalTable">
+            <tr>
+              <th>ইউজার ইমেইল</th>
+              <th>ব্যালেন্স টাইপ</th>
+              <th>পদ্ধতি</th>
+              <th>অ্যাকাউন্ট</th>
+              <th>পরিমাণ</th>
+              <th>স্ট্যাটাস</th>
+              <th>অ্যাকশন</th>
+            </tr>
+          </table>
+        </div>
+        <div id="adminProducts" class="card">
+          <h2>প্রোডাক্ট ম্যানেজমেন্ট</h2>
+          <div class="product-form">
+            <input type="text" id="productName" class="product-input" placeholder="প্রোডাক্টের নাম">
+            <textarea id="productDescription" class="product-input" placeholder="প্রোডাক্টের বিবরণ"></textarea>
+            <input type="number" id="productPrice" class="product-input" placeholder="মূল্য (টাকা)">
+            <input type="text" id="productImage" class="product-input" placeholder="ইমেজ URL">
+            <button class="btn" onclick="addProduct()">প্রোডাক্ট যোগ করুন</button>
+            <p class="error" id="productError"></p>
+          </div>
+          <table id="productTable">
+            <tr><th>নাম</th><th>বিবরণ</th><th>মূল্য</th><th>ইমেজ</th><th>অ্যাকশন</th></tr>
+          </table>
+        </div>
+        <div id="adminOrders" class="card">
+          <h2>অর্ডার ম্যানেজমেন্ট</h2>
+          <table id="orderTable">
+            <tr>
+              <th>ইউজার ইমেইল</th>
+              <th>প্রোডাক্ট</th>
+              <th>ঠিকানা</th>
+              <th>জেলা</th>
+              <th>থানা</th>
+              <th>উপজেলা</th>
+              <th>গ্রাম</th>
+              <th>মোবাইল</th>
+              <th>স্ট্যাটাস</th>
+              <th>অ্যাকশন</th>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Custom task link
+    const TASK_LINK = 'https://example.com/task';
+
+    // Navigation Section Toggle for User and Admin Dashboards
+    function setupNavigation(containerId) {
+      console.log(`Setting up navigation for ${containerId}`);
+      document.querySelectorAll(`#${containerId} .nav-link`).forEach(link => {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          document.querySelectorAll(`#${containerId} .nav-link`).forEach(l => l.classList.remove('active'));
+          document.querySelectorAll(`#${containerId} .card`).forEach(c => c.classList.remove('active'));
+          this.classList.add('active');
+          const section = this.getAttribute('data-section');
+          document.getElementById(section).classList.add('active');
+          if (section === 'task') {
+            loadTaskTable();
+          } else if (section === 'team') {
+            loadGenerationStructure();
+          } else if (section === 'adminWithdrawals') {
+            loadWithdrawalTable();
+          } else if (section === 'adminProducts') {
+            loadProductTable();
+          } else if (section === 'adminOrders') {
+            loadOrderTable();
+          } else if (section === 'shop') {
+            loadShopProducts();
+          } else if (section === 'agent') {
+            console.log('Agent section loaded');
+          }
+        });
+      });
+    }
+
+    // Initialize navigation
+    setupNavigation('dashboardContainer');
+    setupNavigation('adminDashboardContainer');
+
+    // Check if user is logged in
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+    if (loggedInUser) {
+      if (loggedInUser.role === 'admin') {
+        showAdminDashboard(loggedInUser);
+      } else {
+        showDashboard(loggedInUser);
+      }
+    } else {
+      document.getElementById('loginModal').style.display = 'flex';
+    }
+
+    function showLogin() {
+      document.getElementById('registerModal').style.display = 'none';
+      document.getElementById('adminLoginModal').style.display = 'none';
+      document.getElementById('loginModal').style.display = 'flex';
+    }
+
+    function showRegister() {
+      document.getElementById('loginModal').style.display = 'none';
+      document.getElementById('adminLoginModal').style.display = 'none';
+      document.getElementById('registerModal').style.display = 'flex';
+    }
+
+    function showAdminLogin() {
+      document.getElementById('loginModal').style.display = 'none';
+      document.getElementById('registerModal').style.display = 'none';
+      document.getElementById('adminLoginModal').style.display = 'flex';
+    }
+
+    function register() {
+      const username = document.getElementById('regUsername').value;
+      const email = document.getElementById('regEmail').value;
+      const phone = document.getElementById('regPhone').value;
+      const password = document.getElementById('regPassword').value;
+      const referrer = document.getElementById('regReferrer').value;
+      const error = document.getElementById('registerError');
+
+      if (!username || !email || !phone || !password) {
+        error.textContent = 'সব ফিল্ড পূরণ করুন';
+        return;
+      }
+
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      if (users.find(user => user.email === email)) {
+        error.textContent = 'ইমেইল ইতিমধ্যে নিবন্ধিত';
+        return;
+      }
+
+      if (referrer && !users.find(user => user.email === referrer)) {
+        error.textContent = 'রেফারার ইমেইল খুঁজে পাওয়া যায়নি';
+        return;
+      }
+
+      const user = { 
+        username, 
+        email, 
+        phone,
+        password, 
+        status: 'Unverified', 
+        role: 'user', 
+        activeBalance: 0, 
+        iabbBalance: 0, 
+        taskBalance: 0,
+        completedTasks: [],
+        referrer: referrer || null,
+        taskWithdrawalAllowed: false
+      };
+      users.push(user);
+      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('loggedInUser', JSON.stringify(user));
+      error.textContent = '';
+      showDashboard(user);
+    }
+
+    function login() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const error = document.getElementById('loginError');
+
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      const user = users.find(user => user.email === email && user.password === password);
+
+      if (!user) {
+        error.textContent = 'ভুল ইমেইল বা পাসওয়ার্ড';
+        return;
+      }
+
+      localStorage.setItem('loggedInUser', JSON.stringify(user));
+      error.textContent = '';
+      if (user.role === 'admin') {
+        showAdminDashboard(user);
+      } else {
+        showDashboard(user);
+      }
+    }
+
+    function adminLogin() {
+      const username = document.getElementById('adminUsername').value;
+      const password = document.getElementById('adminPassword').value;
+      const error = document.getElementById('adminLoginError');
+
+      const adminCredentials = [
+        { username: 'admin', password: 'admin123', role: 'admin' }
+      ];
+
+      const admin = adminCredentials.find(admin => admin.username === username && admin.password === password);
+
+      if (!admin) {
+        error.textContent = 'ভুল অ্যাডমিন ইউজারনেম বা পাসওয়ার্ড';
+        return;
+      }
+
+      localStorage.setItem('loggedInUser', JSON.stringify(admin));
+      error.textContent = '';
+      showAdminDashboard(admin);
+    }
+
+    function showDashboard(user) {
+      console.log('Loading dashboard for:', user.email);
+      document.getElementById('loginModal').style.display = 'none';
+      document.getElementById('registerModal').style.display = 'none';
+      document.getElementById('adminLoginModal').style.display = 'none';
+      document.getElementById('dashboardContainer').style.display = 'block';
+      document.getElementById('adminDashboardContainer').style.display = 'none';
+      document.getElementById('username').textContent = user.username;
+      document.getElementById('email').textContent = user.email;
+      document.getElementById('status').textContent = user.status;
+      document.getElementById('status').className = user.status === 'Verified' ? 'status-verified' : 'status-unverified';
+      document.getElementById('activeBalance').textContent = `৳${user.activeBalance || 0}`;
+      document.getElementById('iabbBalance').textContent = `৳${user.iabbBalance || 0}`;
+      document.getElementById('taskBalance').textContent = `৳${user.taskBalance || 0}`;
+      document.getElementById('referLink').textContent = `example.com/ref?user=${user.email}`;
+      document.getElementById('activeBalanceDisplay').textContent = `Active Balance: ৳${user.activeBalance || 0}`;
+      document.getElementById('iabbBalanceDisplay').textContent = `IABB Balance: ৳${user.iabbBalance || 0}`;
+      document.getElementById('taskBalanceDisplay').textContent = `Task Balance: ৳${user.taskBalance || 0}`;
+      document.getElementById('referLinkDisplay').textContent = `example.com/ref?user=${user.email}`;
+      const generations = getGenerations(user.email);
+      const totalMembers = generations.reduce((sum, gen) => sum + gen.members.length, 0);
+      document.getElementById('teamCount').textContent = totalMembers;
+      updateWithdrawForm();
+    }
+
+    function showAdminDashboard(admin) {
+      console.log('Loading admin dashboard');
+      document.getElementById('loginModal').style.display = 'none';
+      document.getElementById('registerModal').style.display = 'none';
+      document.getElementById('adminLoginModal').style.display = 'none';
+      document.getElementById('dashboardContainer').style.display = 'none';
+      document.getElementById('adminDashboardContainer').style.display = 'block';
+      loadUserTable();
+      loadWithdrawalTable();
+      loadProductTable();
+      loadOrderTable();
+    }
+
+    function loadUserTable() {
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const table = document.getElementById('userTable');
+      while (table.rows.length > 1) {
+        table.deleteRow(1);
+      }
+      users.forEach(user => {
+        const row = table.insertRow();
+        row.insertCell(0).textContent = user.username;
+        row.insertCell(1).textContent = user.email;
+        row.insertCell(2).textContent = user.status;
+        row.insertCell(3).textContent = `৳${user.activeBalance || 0}`;
+        const actionCell = row.insertCell(4);
+        const toggleButton = document.createElement('button');
+        toggleButton.className = 'btn';
+        toggleButton.textContent = user.status === 'Unverified' ? 'ভেরিফাই করুন' : 'আনভেরিফাই করুন';
+        toggleButton.onclick = () => toggleUserStatus(user.email);
+        actionCell.appendChild(toggleButton);
+        const balanceInput = document.createElement('input');
+        balanceInput.type = 'number';
+        balanceInput.className = 'balance-input';
+        balanceInput.placeholder = 'ব্যালেন্স যোগ';
+        actionCell.appendChild(balanceInput);
+        const addBalanceButton = document.createElement('button');
+        addBalanceButton.className = 'btn';
+        addBalanceButton.textContent = 'যোগ করুন';
+        addBalanceButton.onclick = () => addActiveBalance(user.email, balanceInput.value);
+        actionCell.appendChild(addBalanceButton);
+        const taskWithdrawCell = row.insertCell(5);
+        const taskWithdrawButton = document.createElement('button');
+        taskWithdrawButton.className = 'btn';
+        taskWithdrawButton.textContent = user.taskWithdrawalAllowed ? 'অনুমতি বাতিল' : 'অনুমতি দিন';
+        taskWithdrawButton.onclick = () => toggleTaskWithdrawal(user.email);
+        taskWithdrawCell.appendChild(taskWithdrawButton);
+      });
+    }
+
+    function toggleUserStatus(email) {
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      users = users.map(user => {
+        if (user.email === email) {
+          return { ...user, status: user.status === 'Unverified' ? 'Verified' : 'Unverified' };
+        }
+        return user;
+      });
+      localStorage.setItem('users', JSON.stringify(users));
+      loadUserTable();
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (loggedInUser.email === email) {
+        loggedInUser.status = loggedInUser.status === 'Unverified' ? 'Verified' : 'Unverified';
+        localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+        showDashboard(loggedInUser);
+      }
+    }
+
+    function toggleTaskWithdrawal(email) {
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      users = users.map(user => {
+        if (user.email === email) {
+          return { ...user, taskWithdrawalAllowed: !user.taskWithdrawalAllowed };
+        }
+        return user;
+      });
+      localStorage.setItem('users', JSON.stringify(users));
+      loadUserTable();
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (loggedInUser.email === email) {
+        loggedInUser.taskWithdrawalAllowed = !loggedInUser.taskWithdrawalAllowed;
+        localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+        showDashboard(loggedInUser);
+      }
+    }
+
+    function addActiveBalance(email, amount) {
+      if (!amount || amount <= 0) {
+        alert('দয়া করে একটি বৈধ পরিমাণ লিখুন');
+        return;
+      }
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      users = users.map(user => {
+        if (user.email === email) {
+          return { ...user, activeBalance: (user.activeBalance || 0) + parseFloat(amount) };
+        }
+        return user;
+      });
+      localStorage.setItem('users', JSON.stringify(users));
+      loadUserTable();
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (loggedInUser.email === email) {
+        loggedInUser.activeBalance = (loggedInUser.activeBalance || 0) + parseFloat(amount);
+        localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+        showDashboard(loggedInUser);
+      }
+    }
+
+    function transferBalance() {
+      const transferEmail = document.getElementById('transferEmail').value;
+      const transferAmount = parseFloat(document.getElementById('transferAmount').value);
+      const transferError = document.getElementById('transferError');
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+      if (!loggedInUser) {
+        transferError.textContent = 'লগইন করুন';
+        return;
+      }
+
+      if (!transferEmail || !transferAmount) {
+        transferError.textContent = 'ইমেইল এবং পরিমাণ পূরণ করুন';
+        return;
+      }
+
+      if (transferAmount <= 0) {
+        transferError.textContent = 'বৈধ পরিমাণ লিখুন';
+        return;
+      }
+
+      if (transferEmail === loggedInUser.email) {
+        transferError.textContent = 'নিজের কাছে ট্রান্সফার করা যাবে না';
+        return;
+      }
+
+      if ((loggedInUser.activeBalance || 0) < transferAmount) {
+        transferError.textContent = 'অপর্যাপ্ত একটিভ ব্যালেন্স';
+        return;
+      }
+
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      const recipient = users.find(user => user.email === transferEmail);
+
+      if (!recipient) {
+        transferError.textContent = 'রিসিভারের ইমেইল খুঁজে পাওয়া যায়নি';
+        return;
+      }
+
+      users = users.map(user => {
+        if (user.email === loggedInUser.email) {
+          return { ...user, activeBalance: (user.activeBalance || 0) - transferAmount };
+        }
+        if (user.email === transferEmail) {
+          return { ...user, activeBalance: (user.activeBalance || 0) + transferAmount };
+        }
+        return user;
+      });
+
+      localStorage.setItem('users', JSON.stringify(users));
+      loggedInUser.activeBalance = (loggedInUser.activeBalance || 0) - transferAmount;
+      localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+      transferError.textContent = '';
+      showDashboard(loggedInUser);
+      alert(`৳${transferAmount} সফলভাবে ${transferEmail} এ ট্রান্সফার করা হয়েছে`);
+    }
+
+    function activateID() {
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (!loggedInUser) {
+        alert('লগইন করুন');
+        return;
+      }
+      if (loggedInUser.status === 'Verified') {
+        alert('আপনার আইডি ইতিমধ্যে একটিভ');
+        return;
+      }
+      if ((loggedInUser.activeBalance || 0) < 500) {
+        alert('আইডি একটিভ করতে আপনার একটিভ ব্যালেন্সে কমপক্ষে ৳৫০০ থাকতে হবে');
+        return;
+      }
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      users = users.map(user => {
+        if (user.email === loggedInUser.email) {
+          return { ...user, activeBalance: user.activeBalance - 500, status: 'Verified' };
+        }
+        return user;
+      });
+      localStorage.setItem('users', JSON.stringify(users));
+      loggedInUser.activeBalance -= 500;
+      loggedInUser.status = 'Verified';
+      localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+      showDashboard(loggedInUser);
+      alert('আইডি সফলভাবে একটিভ করা হয়েছে!');
+    }
+
+    function loadTaskTable() {
+      console.log('Loading task table');
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (!loggedInUser) {
+        console.error('No logged-in user');
+        return;
+      }
+      const table = document.getElementById('taskTable');
+      while (table.rows.length > 1) {
+        table.deleteRow(1);
+      }
+      const completedTasks = loggedInUser.completedTasks || [];
+      for (let i = 1; i <= 10; i++) {
+        const row = table.insertRow();
+        row.insertCell(0).textContent = `টাস্ক ${i}`;
+        const linkCell = row.insertCell(1);
+        const link = document.createElement('a');
+        link.href = TASK_LINK;
+        link.className = 'task-link';
+        link.target = '_blank';
+        link.textContent = 'টাস্ক লিংক';
+        linkCell.appendChild(link);
+        row.insertCell(2).textContent = completedTasks.includes(i) ? 'সম্পন্ন' : 'পেন্ডিং';
+        const actionCell = row.insertCell(3);
+        const button = document.createElement('button');
+        button.className = 'btn';
+        button.textContent = 'সম্পন্ন করুন';
+        button.disabled = completedTasks.includes(i);
+        button.onclick = () => completeTask(i);
+        actionCell.appendChild(button);
+      }
+    }
+
+    function completeTask(taskId) {
+      console.log(`Completing task ${taskId}`);
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (!loggedInUser) {
+        alert('লগইন করুন');
+        return;
+      }
+      if (loggedInUser.completedTasks && loggedInUser.completedTasks.includes(taskId)) {
+        alert('এই টাস্ক ইতিমধ্যে সম্পন্ন হয়েছে');
+        return;
+      }
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      users = users.map(user => {
+        if (user.email === loggedInUser.email) {
+          const completedTasks = user.completedTasks || [];
+          completedTasks.push(taskId);
+          return { 
+            ...user, 
+            taskBalance: (user.taskBalance || 0) + 2, 
+            completedTasks 
+          };
+        }
+        return user;
+      });
+      localStorage.setItem('users', JSON.stringify(users));
+      loggedInUser.taskBalance = (loggedInUser.taskBalance || 0) + 2;
+      loggedInUser.completedTasks = loggedInUser.completedTasks || [];
+      loggedInUser.completedTasks.push(taskId);
+      localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+      loadTaskTable();
+      showDashboard(loggedInUser);
+      alert(`টাস্ক ${taskId} সম্পন্ন! আপনি ৳২ পেয়েছেন`);
+    }
+
+    function getGenerations(userEmail) {
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const generations = [];
+      let currentLevel = users.filter(user => user.referrer === userEmail);
+      generations.push({ level: 1, members: currentLevel });
+      for (let level = 2; level <= 5; level++) {
+        const nextLevelEmails = currentLevel.map(user => user.email);
+        currentLevel = users.filter(user => nextLevelEmails.includes(user.referrer));
+        generations.push({ level, members: currentLevel });
+      }
+      return generations;
+    }
+
+    function loadGenerationStructure() {
+      console.log('Loading generation structure');
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (!loggedInUser) {
+        console.error('No logged-in user');
+        return;
+      }
+      const container = document.getElementById('generationStructure');
+      container.innerHTML = '';
+      const generations = getGenerations(loggedInUser.email);
+      generations.forEach(gen => {
+        const section = document.createElement('div');
+        section.className = 'generation-section';
+        const totalMembers = gen.members.length;
+        const unverifiedMembers = gen.members.filter(member => member.status === 'Unverified');
+        const unverifiedCount = unverifiedMembers.length;
+        section.innerHTML = `
+          <h3>জেনারেশন ${gen.level}</h3>
+          <p>মোট মেম্বার: ${totalMembers}</p>
+          <p>আনভেরিফাইড মেম্বার: ${unverifiedCount}</p>
+        `;
+        if (unverifiedCount > 0) {
+          const table = document.createElement('table');
+          table.className = 'sub-table';
+          table.innerHTML = `
+            <tr>
+              <th>নাম</th>
+              <th>ইমেইল</th>
+              <th>ফোন নম্বর</th>
+            </tr>
+          `;
+          unverifiedMembers.forEach(member => {
+            const row = table.insertRow();
+            row.insertCell(0).textContent = member.username;
+            row.insertCell(1).textContent = member.email;
+            row.insertCell(2).textContent = member.phone || 'N/A';
+          });
+          section.appendChild(table);
+        } else {
+          const noUnverified = document.createElement('p');
+          noUnverified.textContent = 'কোনো আনভেরিফাইড মেম্বার নেই';
+          section.appendChild(noUnverified);
+        }
+        container.appendChild(section);
+      });
+    }
+
+    function updateWithdrawForm() {
+      const balanceType = document.getElementById('withdrawBalanceType').value;
+      const method = document.getElementById('withdrawMethod').value;
+      const accountInput = document.getElementById('withdrawAccount');
+      
+      if (method) {
+        accountInput.style.display = 'block';
+        if (method === 'bkash' || method === 'nagad') {
+          accountInput.placeholder = 'ফোন নম্বর (যেমন: +8801XXXXXXXXX)';
+        } else {
+          accountInput.placeholder = 'ওয়ালেট অ্যাড্রেস (যেমন: 0x...)';
+        }
+      } else {
+        accountInput.style.display = 'none';
+      }
+    }
+
+    function submitWithdrawal() {
+      console.log('Submitting withdrawal request');
+      const balanceType = document.getElementById('withdrawBalanceType').value;
+      const method = document.getElementById('withdrawMethod').value;
+      const account = document.getElementById('withdrawAccount').value;
+      const amount = parseFloat(document.getElementById('withdrawAmount').value);
+      const error = document.getElementById('withdrawError');
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+      if (!loggedInUser) {
+        error.textContent = 'লগইন করুন';
+        return;
+      }
+
+      if (!balanceType || !method || !account || !amount) {
+        error.textContent = 'সব ফিল্ড পূরণ করুন';
+        return;
+      }
+
+      if (amount < 300) {
+        error.textContent = 'ন্যূনতম উইথড্র পরিমাণ ৳৩০০';
+        return;
+      }
+
+      if (balanceType === 'iabbBalance') {
+        if ((loggedInUser.iabbBalance || 0) < amount) {
+          error.textContent = 'অপর্যাপ্ত IABB ব্যালেন্স';
+          return;
+        }
+      } else if (balanceType === 'taskBalance') {
+        if (!loggedInUser.taskWithdrawalAllowed) {
+          error.textContent = 'টাস্ক ব্যালেন্স উইথড্রের জন্য অ্যাডমিনের অনুমতি প্রয়োজন';
+          return;
+        }
+        if ((loggedInUser.taskBalance || 0) < amount) {
+          error.textContent = 'অপর্যাপ্ত টাস্ক ব্যালেন্স';
+          return;
+        }
+      }
+
+      if (method === 'bkash' || method === 'nagad') {
+        if (!/^\+8801[3-9][0-9]{8}$/.test(account)) {
+          error.textContent = 'বৈধ ফোন নম্বর লিখুন (যেমন: +8801XXXXXXXXX)';
+          return;
+        }
+      }
+
+      if (method === 'usdt' || method === 'bep20') {
+        if (!/^0x[a-fA-F0-9]{40}$/.test(account)) {
+          error.textContent = 'বৈধ ওয়ালেট অ্যাড্রেস লিখুন (42 অক্ষর, 0x দিয়ে শুরু)';
+          return;
+        }
+      }
+
+      const withdrawal = {
+        id: Date.now(),
+        userEmail: loggedInUser.email,
+        balanceType,
+        method,
+        account,
+        amount,
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      };
+
+      let withdrawals = JSON.parse(localStorage.getItem('withdrawals')) || [];
+      withdrawals.push(withdrawal);
+      localStorage.setItem('withdrawals', JSON.stringify(withdrawals));
+
+      error.textContent = '';
+      document.getElementById('withdrawBalanceType').value = '';
+      document.getElementById('withdrawMethod').value = '';
+      document.getElementById('withdrawAccount').value = '';
+      document.getElementById('withdrawAmount').value = '';
+      updateWithdrawForm();
+      alert('উইথড্র রিকুয়েস্ট সফলভাবে জমা দেওয়া হয়েছে! অ্যাডমিন অনুমোদনের অপেক্ষায়।');
+    }
+
+    function loadWithdrawalTable() {
+      console.log('Loading withdrawal table');
+      const withdrawals = JSON.parse(localStorage.getItem('withdrawals')) || [];
+      const table = document.getElementById('withdrawalTable');
+      while (table.rows.length > 1) {
+        table.deleteRow(1);
+      }
+      withdrawals.forEach(withdrawal => {
+        const row = table.insertRow();
+        row.insertCell(0).textContent = withdrawal.userEmail;
+        row.insertCell(1).textContent = withdrawal.balanceType === 'iabbBalance' ? 'IABB ব্যালেন্স' : 'টাস্ক ব্যালেন্স';
+        row.insertCell(2).textContent = withdrawal.method.toUpperCase();
+        row.insertCell(3).textContent = withdrawal.account;
+        row.insertCell(4).textContent = `৳${withdrawal.amount}`;
+        row.insertCell(5).textContent = withdrawal.status;
+        const actionCell = row.insertCell(6);
+        if (withdrawal.status === 'pending') {
+          const approveButton = document.createElement('button');
+          approveButton.className = 'btn';
+          approveButton.textContent = 'অনুমোদন';
+          approveButton.onclick = () => handleWithdrawal(withdrawal.id, 'approved');
+          actionCell.appendChild(approveButton);
+          const rejectButton = document.createElement('button');
+          rejectButton.className = 'btn';
+          rejectButton.textContent = 'প্রত্যাখ্যান';
+          rejectButton.onclick = () => handleWithdrawal(withdrawal.id, 'rejected');
+          actionCell.appendChild(rejectButton);
+        }
+      });
+    }
+
+    function handleWithdrawal(id, action) {
+      console.log(`Handling withdrawal ${id}: ${action}`);
+      let withdrawals = JSON.parse(localStorage.getItem('withdrawals')) || [];
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      const withdrawal = withdrawals.find(w => w.id === id);
+      if (!withdrawal) return;
+
+      withdrawals = withdrawals.map(w => {
+        if (w.id === id) {
+          return { ...w, status: action };
+        }
+        return w;
+      });
+
+      if (action === 'approved') {
+        users = users.map(user => {
+          if (user.email === withdrawal.userEmail) {
+            if (withdrawal.balanceType === 'iabbBalance') {
+              return { ...user, iabbBalance: (user.iabbBalance || 0) - withdrawal.amount };
+            } else if (withdrawal.balanceType === 'taskBalance') {
+              return { ...user, taskBalance: (user.taskBalance || 0) - withdrawal.amount };
+            }
+          }
+          return user;
+        });
+        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+        if (loggedInUser.email === withdrawal.userEmail) {
+          if (withdrawal.balanceType === 'iabbBalance') {
+            loggedInUser.iabbBalance = (loggedInUser.iabbBalance || 0) - withdrawal.amount;
+          } else if (withdrawal.balanceType === 'taskBalance') {
+            loggedInUser.taskBalance = (loggedInUser.taskBalance || 0) - withdrawal.amount;
+          }
+          localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+          showDashboard(loggedInUser);
+        }
+      }
+
+      localStorage.setItem('withdrawals', JSON.stringify(withdrawals));
+      localStorage.setItem('users', JSON.stringify(users));
+      loadWithdrawalTable();
+      alert(`উইথড্র রিকুয়েস্ট ${action === 'approved' ? 'অনুমোদিত' : 'প্রত্যাখ্যাত'} হয়েছে`);
+    }
+
+    // Shop Section: Load Products for Users
+    function loadShopProducts() {
+      console.log('Loading shop products');
+      const products = JSON.parse(localStorage.getItem('products')) || [];
+      const productGrid = document.getElementById('productGrid');
+      productGrid.innerHTML = '';
+      if (products.length === 0) {
+        productGrid.innerHTML = '<p>কোনো প্রোডাক্ট নেই</p>';
+        return;
+      }
+      products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card';
+        productCard.innerHTML = `
+          <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/150'">
+          <h4>${product.name}</h4>
+          <p>${product.description}</p>
+          <p>মূল্য: ৳${product.price}</p>
+          <button class="btn" onclick="openOrderModal(${product.id})">কিনুন</button>
+        `;
+        productGrid.appendChild(productCard);
+      });
+    }
+
+    // Open Order Modal
+    function openOrderModal(productId) {
+      const products = JSON.parse(localStorage.getItem('products')) || [];
+      const product = products.find(p => p.id === productId);
+      if (!product) {
+        alert('প্রোডাক্ট পাওয়া যায়নি');
+        return;
+      }
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (!loggedInUser) {
+        alert('অর্ডার করতে লগইন করুন');
+        return;
+      }
+      document.getElementById('orderProductName').textContent = `প্রোডাক্ট: ${product.name}`;
+      document.getElementById('orderModal').dataset.productId = productId;
+      document.getElementById('orderAddress').value = '';
+      document.getElementById('orderDistrict').value = '';
+      document.getElementById('orderThana').value = '';
+      document.getElementById('orderUpazila').value = '';
+      document.getElementById('orderVillage').value = '';
+      document.getElementById('orderMobile').value = loggedInUser.phone || '';
+      document.getElementById('orderError').textContent = '';
+      document.getElementById('orderModal').style.display = 'flex';
+    }
+
+    // Close Order Modal
+    function closeOrderModal() {
+      document.getElementById('orderModal').style.display = 'none';
+    }
+
+    // Submit Order
+    function submitOrder() {
+      console.log('Submitting order');
+      const productId = parseInt(document.getElementById('orderModal').dataset.productId);
+      const address = document.getElementById('orderAddress').value;
+      const district = document.getElementById('orderDistrict').value;
+      const thana = document.getElementById('orderThana').value;
+      const up္စာ = document.getElementById('orderUpazila').value;
+      const village = document.getElementById('orderVillage').value;
+      const mobile = document.getElementById('orderMobile').value;
+      const error = document.getElementById('orderError');
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+      if (!address || !district || !thana || !upazila || !village || !mobile) {
+        error.textContent = 'সব ফিল্ড পূরণ করুন';
+        return;
+      }
+
+      if (!/^\+8801[3-9][0-9]{8}$/.test(mobile)) {
+        error.textContent = 'বৈধ মোবাইল নম্বর লিখুন (যেমন: +8801XXXXXXXXX)';
+        return;
+      }
+
+      const order = {
+        id: Date.now(),
+        userEmail: loggedInUser.email,
+        productId,
+        address,
+        district,
+        thana,
+        upazila,
+        village,
+        mobile,
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      };
+
+      let orders = JSON.parse(localStorage.getItem('orders')) || [];
+      orders.push(order);
+      localStorage.setItem('orders', JSON.stringify(orders));
+
+      error.textContent = '';
+      closeOrderModal();
+      alert('অর্ডার সফলভাবে জমা দেওয়া হয়েছে! অ্যাডমিন অনুমোদনের অপেক্ষায়।');
+    }
+
+    // Admin: Add Product
+    function addProduct() {
+      console.log('Adding product');
+      const name = document.getElementById('productName').value;
+      const description = document.getElementById('productDescription').value;
+      const price = parseFloat(document.getElementById('productPrice').value);
+      const image = document.getElementById('productImage').value;
+      const error = document.getElementById('productError');
+
+      if (!name || !description || !price || !image) {
+        error.textContent = 'সব ফিল্ড পূরণ করুন';
+        return;
+      }
+
+      if (price <= 0) {
+        error.textContent = 'বৈধ মূল্য লিখুন';
+        return;
+      }
+
+      const product = {
+        id: Date.now(),
+        name,
+        description,
+        price,
+        image
+      };
+
+      let products = JSON.parse(localStorage.getItem('products')) || [];
+      products.push(product);
+      localStorage.setItem('products', JSON.stringify(products));
+
+      error.textContent = '';
+      document.getElementById('productName').value = '';
+      document.getElementById('productDescription').value = '';
+      document.getElementById('productPrice').value = '';
+      document.getElementById('productImage').value = '';
+      loadProductTable();
+      alert('প্রোডাক্ট সফলভাবে যোগ করা হয়েছে');
+    }
+
+    // Admin: Load Product Table
+    function loadProductTable() {
+      console.log('Loading product table');
+      const products = JSON.parse(localStorage.getItem('products')) || [];
+      const table = document.getElementById('productTable');
+      while (table.rows.length > 1) {
+        table.deleteRow(1);
+      }
+      products.forEach(product => {
+        const row = table.insertRow();
+        row.insertCell(0).textContent = product.name;
+        row.insertCell(1).textContent = product.description;
+        row.insertCell(2).textContent = `৳${product.price}`;
+        const imageCell = row.insertCell(3);
+        const img = document.createElement('img');
+        img.src = product.image;
+        img.alt = product.name;
+        img.style.width = '50px';
+        img.style.height = '50px';
+        img.onerror = () => { img.src = 'https://via.placeholder.com/50'; };
+        imageCell.appendChild(img);
+        const actionCell = row.insertCell(4);
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'btn';
+        deleteButton.textContent = 'মুছুন';
+        deleteButton.onclick = () => deleteProduct(product.id);
+        actionCell.appendChild(deleteButton);
+      });
+    }
+
+    // Admin: Delete Product
+    function deleteProduct(productId) {
+      console.log(`Deleting product ${productId}`);
+      let products = JSON.parse(localStorage.getItem('products')) || [];
+      products = products.filter(product => product.id !== productId);
+      localStorage.setItem('products', JSON.stringify(products));
+      loadProductTable();
+      alert('প্রোডাক্ট মুছে ফেলা হয়েছে');
+    }
+
+    // Admin: Load Order Table
+    function loadOrderTable() {
+      console.log('Loading order table');
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const products = JSON.parse(localStorage.getItem('products')) || [];
+      const table = document.getElementById('orderTable');
+      while (table.rows.length > 1) {
+        table.deleteRow(1);
+      }
+      orders.forEach(order => {
+        const product = products.find(p => p.id === order.productId) || { name: 'প্রোডাক্ট মুছে ফেলা হয়েছে' };
+        const row = table.insertRow();
+        row.insertCell(0).textContent = order.userEmail;
+        row.insertCell(1).textContent = product.name;
+        row.insertCell(2).textContent = order.address;
+        row.insertCell(3).textContent = order.district;
+        row.insertCell(4).textContent = order.thana;
+        row.insertCell(5).textContent = order.upazila;
+        row.insertCell(6).textContent = order.village;
+        row.insertCell(7).textContent = order.mobile;
+        row.insertCell(8).textContent = order.status;
+        const actionCell = row.insertCell(9);
+        if (order.status === 'pending') {
+          const approveButton = document.createElement('button');
+          approveButton.className = 'btn';
+          approveButton.textContent = 'অনুমোদন';
+          approveButton.onclick = () => updateOrderStatus(order.id, 'approved');
+          actionCell.appendChild(approveButton);
+          const shipButton = document.createElement('button');
+          shipButton.className = 'btn';
+          shipButton.textContent = 'শিপড';
+          shipButton.onclick = () => updateOrderStatus(order.id, 'shipped');
+          actionCell.appendChild(shipButton);
+        } else if (order.status === 'approved') {
+          const shipButton = document.createElement('button');
+          shipButton.className = 'btn';
+          shipButton.textContent = 'শিপড';
+          shipButton.onclick = () => updateOrderStatus(order.id, 'shipped');
+          actionCell.appendChild(shipButton);
+        }
+      });
+    }
+
+    // Admin: Update Order Status
+    function updateOrderStatus(orderId, status) {
+      console.log(`Updating order ${orderId} to ${status}`);
+      let orders = JSON.parse(localStorage.getItem('orders')) || [];
+      orders = orders.map(order => {
+        if (order.id === orderId) {
+          return { ...order, status };
+        }
+        return order;
+      });
+      localStorage.setItem('orders', JSON.stringify(orders));
+      loadOrderTable();
+      alert(`অর্ডার স্ট্যাটাস ${status === 'approved' ? 'অনুমোদিত' : 'শিপড'} হয়েছে`);
+    }
+
+    function logout() {
+      localStorage.removeItem('loggedInUser');
+      window.location.reload();
+    }
+  </script>
+</body>
+</html>
